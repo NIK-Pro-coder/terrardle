@@ -176,3 +176,55 @@ blockquote {
 	align-items: center;
 	justify-content: center;
 }
+
+#itemcontainer {
+	display: flex;
+	flex-wrap: wrap;
+
+	justify-content: center;
+}
+
+#itemcontainer button {
+	display: flex;
+
+	align-items: center;
+	justify-content: space-evenly;
+}
+
+#itemcontainer button img {
+	padding-right: 10px;
+}
+
+td {
+	border: 1px solid gray;
+	border-radius: 10px;
+}
+
+td img {
+	padding-top: 10px;
+}
+
+#iteminput {
+	margin-top: 10px;
+}
+
+.border {
+	border: 1px solid gray;
+	border-radius: 5px;
+}
+
+#yesterdayitem img {
+	padding-right: 10px;
+}
+
+.itemspace > * {
+	margin: 10px;
+}
+
+#winitem img {
+	padding-right: 10px;
+}
+
+abbr {
+	text-decoration: none;
+}

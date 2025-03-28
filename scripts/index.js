@@ -21,14 +21,14 @@ function updateButtons() {
 
 	for (let i = 0; i < ITEMS.length; i++) {
 		if (
-			ITEMS[i].name.toLowerCase().startsWith(userinput) &&
+			ITEMS[i].name.toLowerCase().includes(userinput) &&
 			!already.includes(ITEMS[i].name)
 		) {
 			const btn = document.createElement("button");
 
 			already.push(ITEMS[i].name);
 
-			btn.innerHTML = ITEMS[i].name;
+			btn.innerHTML = `<img src="${ITEMS[i].imgs[0]}">${ITEMS[i].name}`;
 			btn.addEventListener("click", () => {
 				selectItem(ITEMS[i]);
 			});
@@ -106,6 +106,42 @@ const RARITIES = {
 	Amber: 14,
 };
 
+function laterRelease(rel1, rel2) {
+	let n1 = "";
+	let n2 = "";
+
+	for (let i = 0; i < rel1.length; i++) {
+		if (i > 7) {
+			n1 += rel1[i];
+		}
+	}
+	for (let i = 0; i < rel2.length; i++) {
+		if (i > 7) {
+			n2 += rel2[i];
+		}
+	}
+
+	if (n2 == "Release") return true;
+	if (n1 == "Release") return false;
+
+	let s1 = n1.split(".");
+	let s2 = n2.split(".");
+
+	let l = Math.min(s1.length, s2.length);
+
+	for (let i = 0; i < l; i++) {
+		if (s1[i] > s2[i]) {
+			return true;
+		} else {
+			if (s2[i] > s1[i]) {
+				return false;
+			}
+		}
+	}
+
+	return s1.length > s2.length;
+}
+
 function selectItem(item) {
 	const iteminput = document.getElementById("iteminput");
 	iteminput.value = "";
@@ -120,15 +156,23 @@ function selectItem(item) {
 	num = guesses.children.length + 1;
 
 	const tip = document.getElementById("tooltip");
+	let extra = 0;
 	if (SELITEM.tooltip != "No tooltip for this item") {
-		tip.innerHTML = "Item tooltip: ";
+		let p = "";
 		for (let i = 0; i < SELITEM.tooltip.length; i++) {
-			if (i < num * 2) {
-				tip.innerHTML += SELITEM.tooltip[i];
+			if (i < num * 2 + extra) {
+				p += SELITEM.tooltip[i];
+				if (SELITEM.tooltip[i] == " ") {
+					extra++;
+				}
 			} else {
-				tip.innerHTML += "-";
+				if (i == num * 2 + extra) {
+					p += "</em>";
+				}
+				p += "-";
 			}
 		}
+		tip.innerHTML = `Item tooltip: <em>${p}`;
 	}
 
 	let tr = document.createElement("tr");
@@ -215,6 +259,19 @@ function selectItem(item) {
 	}
 	tr.innerHTML += `<td class="${cls}">${ins}${item.research}</td>`;
 
+	if (item.released == SELITEM.released) {
+		cls = "correct";
+		ins = "";
+	} else {
+		cls = "wrong";
+		if (laterRelease(item.released, SELITEM.released)) {
+			ins = " < ";
+		} else {
+			ins = " > ";
+		}
+	}
+	tr.innerHTML += `<td class="${cls}">${ins}${item.released}</td>`;
+
 	guesses.appendChild(tr);
 
 	if (SELITEM.name == item.name) {
@@ -279,24 +336,6 @@ async function main() {
 
 	ITEMS = ITEMINFO.done;
 
-	document.getElementById("done").innerHTML =
-		`Successfully parsed ${ITEMS.length} items`;
-	document.getElementById("fail").innerHTML =
-		`Failed to parse ${ITEMINFO.fail.length} items`;
-
-	const container = document.getElementById("failcontainer");
-
-	for (let i = 0; i < ITEMINFO.fail.length; i++) {
-		let a = document.createElement("a");
-		let f = ITEMINFO.fail[i];
-
-		a.href = f.url;
-		a.innerHTML = f.url;
-		a.style = "display: block;";
-
-		container.appendChild(a);
-	}
-
 	SELITEM = ITEMS[currentday % ITEMS.length];
 
 	const tip = document.getElementById("tooltip");
@@ -315,6 +354,8 @@ async function main() {
 
 	const iteminput = document.getElementById("iteminput");
 	const itemcontainer = document.getElementById("itemcontainer");
+
+	iteminput.focus();
 
 	iteminput.addEventListener("input", () => {
 		updateButtons();

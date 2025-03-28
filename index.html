@@ -3,17 +3,18 @@
 	<head>
 		<link rel="stylesheet" href="css/index.css" />
 		<script src="scripts/index.js"></script>
+		<title>Terraria Item Wordle</title>
 	</head>
 	<body>
 		<h1 class="textcenter">Terraria Item Wordle</h1>
 
-		<hr />
-
-		<p class="textcenter">Yesterday's item was:</p>
-		<p id="yesterdayitem" class="textcenter"></p>
-		<p class="textcenter" id="timer">Next daily item in 00:00:00</p>
-
-		<hr />
+		<div class="itemdisplay">
+			<div class="border" style="padding-left: 20px; padding-right: 20px">
+				<p class="textcenter">Yesterday's item was:</p>
+				<p id="yesterdayitem" class="textcenter"></p>
+				<p class="textcenter" id="timer">Next daily item in 00:00:00</p>
+			</div>
+		</div>
 
 		<p id="what" class="textcenter">Guessing the daily item</p>
 
@@ -27,6 +28,7 @@
 						<th>Rarity</th>
 						<th>Sell Value</th>
 						<th>Research</th>
+						<th>Released In</th>
 					</tr>
 				</thead>
 				<tbody id="guesses"></tbody>
@@ -43,26 +45,23 @@
 
 		<div id="win" hidden>
 			<h1 id="winnum" class="textcenter">You won in 0 guesses!</h1>
-			<h3 id="winitem" class="textcenter"></h3>
+			<div class="itemdisplay">
+				<div
+					class="border"
+					style="padding-left: 20px; padding-right: 20px"
+				>
+					<h3 id="winitem" class="textcenter"></h3>
+				</div>
+			</div>
 		</div>
 
-		<div class="itemcenter">
+		<div class="itemcenter itemspace">
 			<button id="giveup" onclick="giveUp()">Give up</button>
 			<button id="random" onclick="randomItem()">Random item</button>
 		</div>
 	</body>
 
 	<footer>
-		<hr />
-
-		<details class="textcenter">
-			<summary>Item information</summary>
-			<p id="done">Successfully parsed 0 items</p>
-			<details id="failcontainer">
-				<summary id="fail">Failed to parse 0 items</summary>
-			</details>
-		</details>
-
 		<p class="textcenter">
 			Made by <a href="https://github.com/NIK-Pro-coder">Team Bean</a>,
 			inspired by <a href="https://github.com/cxhuy">cxhuy</a>'s
