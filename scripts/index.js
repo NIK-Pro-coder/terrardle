@@ -19,6 +19,13 @@ function updateButtons() {
 
 	let already = [];
 
+	const guesses = document.getElementById("guesses");
+
+	for (let i = 0; i < guesses.children.length; i++) {
+		let tr = guesses.children[i];
+		already.push(tr.children[0].children[0].title);
+	}
+
 	for (let i = 0; i < ITEMS.length; i++) {
 		if (
 			ITEMS[i].name.toLowerCase().includes(userinput) &&
@@ -157,6 +164,7 @@ function selectItem(item) {
 
 	const tip = document.getElementById("tooltip");
 	let extra = 0;
+	let complete = true;
 	if (SELITEM.tooltip != "No tooltip for this item") {
 		let p = "";
 		for (let i = 0; i < SELITEM.tooltip.length; i++) {
@@ -170,9 +178,14 @@ function selectItem(item) {
 					p += "</em>";
 				}
 				p += "-";
+				complete = false;
 			}
 		}
 		tip.innerHTML = `Item tooltip: <em>${p}`;
+	}
+
+	if (complete) {
+		giveUp();
 	}
 
 	let tr = document.createElement("tr");
@@ -331,6 +344,14 @@ function updateTimer() {
 	setTimeout(updateTimer, 1000);
 }
 
+function selectFirst(event, input) {
+	var code = event.keyCode ? event.keyCode : event.which;
+	if (code == 13) {
+		const ins = document.getElementById("itemcontainer");
+		ins.children[0].click();
+	}
+}
+
 async function main() {
 	let given = await fetch("/items");
 	ITEMINFO = await given.json();
@@ -342,6 +363,7 @@ async function main() {
 	const tip = document.getElementById("tooltip");
 	if (SELITEM.tooltip == "No tooltip for this item") {
 		tip.innerHTML = "No tooltip for this item";
+		document.getElementById("what").innerHTML += " (hard)";
 	} else {
 		tip.innerHTML = "Item tooltip: ";
 		for (let i = 0; i < SELITEM.tooltip.length; i++) {
@@ -353,8 +375,8 @@ async function main() {
 	document.getElementById("yesterdayitem").innerHTML =
 		`<abbr class="itemdisplay" title="${YESTERDAY.tooltip}"><img src="${YESTERDAY.imgs[0]}">${YESTERDAY.name}</abbr>`;
 
-	const iteminput = document.getElementById("iteminput");
 	const itemcontainer = document.getElementById("itemcontainer");
+	const iteminput = document.getElementById("iteminput");
 
 	iteminput.focus();
 
@@ -362,10 +384,16 @@ async function main() {
 		updateButtons();
 	});
 
+	iteminput.addEventListener("keypress", selectFirst);
+
 	updateTimer();
 }
 
 function randomItem() {
+	const iteminput = document.getElementById("iteminput");
+
+	iteminput.focus();
+
 	let tips = [];
 	for (let i = 0; i < ITEMS.length; i++) {
 		if (ITEMS[i].tooltip != "No tooltip for this item") {
@@ -395,6 +423,10 @@ function randomItem() {
 }
 
 function randomItemHard() {
+	const iteminput = document.getElementById("iteminput");
+
+	iteminput.focus();
+
 	let tips = [];
 	for (let i = 0; i < ITEMS.length; i++) {
 		if (ITEMS[i].tooltip == "No tooltip for this item") {
