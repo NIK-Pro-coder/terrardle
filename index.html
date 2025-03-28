@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+	<head>
+		<link rel="stylesheet" href="css/index.css" />
+		<script src="scripts/index.js"></script>
+	</head>
+	<body>
+		<h1 class="textcenter">Terraria Item Wordle</h1>
+
+		<hr />
+
+		<p class="textcenter">Yesterday's item was:</p>
+		<p id="yesterdayitem" class="textcenter"></p>
+		<p class="textcenter" id="timer">Next daily item in 00:00:00</p>
+
+		<hr />
+
+		<p id="what" class="textcenter">Guessing the daily item</p>
+
+		<div id="guessesnum" hidden>
+			<table class="guesstable">
+				<thead>
+					<tr>
+						<th>Item</th>
+						<th>Max Stack</th>
+						<th>Item Type</th>
+						<th>Rarity</th>
+						<th>Sell Value</th>
+						<th>Research</th>
+					</tr>
+				</thead>
+				<tbody id="guesses"></tbody>
+			</table>
+		</div>
+
+		<div class="itemcenter itemcenter">
+			<input id="iteminput" type="text" />
+		</div>
+
+		<div id="itemcontainer"></div>
+
+		<p id="tooltip" class="textcenter">No tooltip for this item</p>
+
+		<div id="win" hidden>
+			<h1 id="winnum" class="textcenter">You won in 0 guesses!</h1>
+			<h3 id="winitem" class="textcenter"></h3>
+		</div>
+
+		<div class="itemcenter">
+			<button id="giveup" onclick="giveUp()">Give up</button>
+			<button id="random" onclick="randomItem()">Random item</button>
+		</div>
+	</body>
+
+	<footer>
+		<hr />
+
+		<details class="textcenter">
+			<summary>Item information</summary>
+			<p id="done">Successfully parsed 0 items</p>
+			<details id="failcontainer">
+				<summary id="fail">Failed to parse 0 items</summary>
+			</details>
+		</details>
+
+		<p class="textcenter">
+			Made by <a>Team Bean</a>, inspired by
+			<a href="https://github.com/cxhuy">cxhuy</a>'s
+			<a href="https://www.terradle.com/">terradle</a>
+		</p>
+	</footer>
+
+	<script>
+		main();
+	</script>
+</html>

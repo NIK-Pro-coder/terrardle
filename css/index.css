@@ -1,0 +1,178 @@
+.textoutline {
+	text-shadow:
+		-1px -1px 0 #000,
+		1px -1px 0 #000,
+		-1px 1px 0 #000,
+		1px 1px 0 #000;
+}
+
+.Gray {
+	color: #828282;
+}
+
+.White {
+	color: #ffffff;
+}
+
+.Blue {
+	color: #9696ff;
+}
+
+.Green {
+	color: #96ff96;
+}
+
+.Orange {
+	color: #ffc896;
+}
+
+.LightRed {
+	color: #ff9696;
+}
+
+.Pink {
+	color: #ff96ff;
+}
+
+.LightPurple {
+	color: #d2a0ff;
+}
+
+.Lime {
+	color: #96ff0a;
+}
+
+.Yellow {
+	color: #ffff0a;
+}
+
+.Cyan {
+	color: #05c8ff;
+}
+
+.Red {
+	color: #ff2864;
+}
+
+.Purple {
+	color: #b428ff;
+}
+
+.Rainbow {
+	animation: color-change-rainbow 3s infinite;
+}
+@keyframes color-change-rainbow {
+	0% {
+		color: #ff2864;
+	}
+	10% {
+		color: #ff9696;
+	}
+	20% {
+		color: #ffff0a;
+	}
+	30% {
+		color: #ffc896;
+	}
+	40% {
+		color: #96ff0a;
+	}
+	50% {
+		color: #96ff96;
+	}
+	60% {
+		color: #05c8ff;
+	}
+	70% {
+		color: #9696ff;
+	}
+	80% {
+		color: #b428ff;
+	}
+	90% {
+		color: #d2a0ff;
+	}
+	100% {
+		color: #ff2864;
+	}
+}
+
+.FieryRed {
+	animation: color-change-fieryred 3s infinite;
+}
+@keyframes color-change-fieryred {
+	0% {
+		color: #ff2864;
+	}
+	25% {
+		color: #ff9696;
+	}
+	50% {
+		color: #ffff0a;
+	}
+	75% {
+		color: #ff9696;
+	}
+	100% {
+		color: #ff2864;
+	}
+}
+
+.Amber {
+	color: #ffaf00;
+}
+
+#itemcontainer > button {
+	margin: 5px;
+}
+
+.correct {
+	background: green;
+}
+
+.wrong {
+	background: red;
+}
+
+.partial {
+	background: orange;
+}
+
+blockquote {
+	font-style: italic;
+
+	display: flex;
+
+	flex-direction: row;
+
+	justify-content: space-around;
+	align-items: start;
+}
+
+.textcenter {
+	text-align: center;
+}
+
+.guesstable {
+	width: 100%;
+}
+
+.guesstable > * {
+	text-align: center;
+}
+
+.guesstable tr {
+	border-bottom: 1px solid #ddd;
+}
+
+.itemcenter {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.itemdisplay {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
