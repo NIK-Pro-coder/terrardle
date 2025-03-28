@@ -184,7 +184,7 @@ function selectItem(item) {
 		tip.innerHTML = `Item tooltip: <em>${p}`;
 	}
 
-	if (complete) {
+	if (complete && SELITEM.tooltip != "No tooltip for this item") {
 		giveUp();
 	}
 
@@ -358,7 +358,7 @@ async function main() {
 
 	ITEMS = ITEMINFO.done;
 
-	SELITEM = ITEMS[currentday % ITEMS.length];
+	SELITEM = ITEMS[(currentday * 56) % ITEMS.length];
 
 	const tip = document.getElementById("tooltip");
 	if (SELITEM.tooltip == "No tooltip for this item") {
@@ -371,7 +371,7 @@ async function main() {
 		}
 	}
 
-	YESTERDAY = ITEMS[(currentday - 1) % ITEMS.length];
+	YESTERDAY = ITEMS[(currentday * 56 - 1) % ITEMS.length];
 	document.getElementById("yesterdayitem").innerHTML =
 		`<abbr class="itemdisplay" title="${YESTERDAY.tooltip}"><img src="${YESTERDAY.imgs[0]}">${YESTERDAY.name}</abbr>`;
 
