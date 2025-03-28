@@ -11,7 +11,7 @@
 		<div class="itemdisplay">
 			<div class="border" style="padding-left: 20px; padding-right: 20px">
 				<p class="textcenter">Yesterday's item was:</p>
-				<p id="yesterdayitem" class="textcenter"></p>
+				<h2 id="yesterdayitem" class="textcenter"></h2>
 				<p class="textcenter" id="timer">Next daily item in 00:00:00</p>
 			</div>
 		</div>
@@ -44,7 +44,7 @@
 		<p id="tooltip" class="textcenter">No tooltip for this item</p>
 
 		<div id="win" hidden>
-			<h1 id="winnum" class="textcenter">You won in 0 guesses!</h1>
+			<h2 id="winnum" class="textcenter">You won in 0 guesses!</h2>
 			<div class="itemdisplay">
 				<div
 					class="border"
@@ -58,6 +58,9 @@
 		<div class="itemcenter itemspace">
 			<button id="giveup" onclick="giveUp()">Give up</button>
 			<button id="random" onclick="randomItem()">Random item</button>
+			<button id="randomhard" onclick="randomItemHard()">
+				Random item (hard)
+			</button>
 		</div>
 	</body>
 

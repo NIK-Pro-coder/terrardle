@@ -280,6 +280,7 @@ function selectItem(item) {
 		document.getElementById("tooltip").hidden = true;
 		document.getElementById("iteminput").hidden = true;
 		document.getElementById("random").hidden = false;
+		document.getElementById("randomhard").hidden = false;
 
 		if (num > 1) {
 			document.getElementById("winnum").innerHTML = `You won in ${num} guesses`;
@@ -365,15 +366,18 @@ async function main() {
 }
 
 function randomItem() {
-	SELITEM = ITEMS[Math.floor(Math.random() * ITEMS.length)];
-	const tip = document.getElementById("tooltip");
-	if (SELITEM.tooltip == "No tooltip for this item") {
-		tip.innerHTML = "No tooltip for this item";
-	} else {
-		tip.innerHTML = "Item tooltip: ";
-		for (let i = 0; i < SELITEM.tooltip.length; i++) {
-			tip.innerHTML += "-";
+	let tips = [];
+	for (let i = 0; i < ITEMS.length; i++) {
+		if (ITEMS[i].tooltip != "No tooltip for this item") {
+			tips.push(ITEMS[i]);
 		}
+	}
+
+	SELITEM = tips[Math.floor(Math.random() * tips.length)];
+	const tip = document.getElementById("tooltip");
+	tip.innerHTML = "Item tooltip: ";
+	for (let i = 0; i < SELITEM.tooltip.length; i++) {
+		tip.innerHTML += "-";
 	}
 
 	document.getElementById("guessesnum").hidden = true;
@@ -386,6 +390,33 @@ function randomItem() {
 
 	document.getElementById("giveup").hidden = false;
 	document.getElementById("random").hidden = true;
+	document.getElementById("randomhard").hidden = true;
+	document.getElementById("tooltip").hidden = false;
+}
+
+function randomItemHard() {
+	let tips = [];
+	for (let i = 0; i < ITEMS.length; i++) {
+		if (ITEMS[i].tooltip == "No tooltip for this item") {
+			tips.push(ITEMS[i]);
+		}
+	}
+
+	SELITEM = tips[Math.floor(Math.random() * tips.length)];
+	const tip = document.getElementById("tooltip");
+	tip.innerHTML = "No tooltip for this item";
+
+	document.getElementById("guessesnum").hidden = true;
+	document.getElementById("guesses").innerHTML = "";
+
+	document.getElementById("win").hidden = true;
+	document.getElementById("iteminput").hidden = false;
+
+	document.getElementById("what").innerHTML = "Guessing a random item";
+
+	document.getElementById("giveup").hidden = false;
+	document.getElementById("random").hidden = true;
+	document.getElementById("randomhard").hidden = true;
 	document.getElementById("tooltip").hidden = false;
 }
 
@@ -401,4 +432,5 @@ function giveUp() {
 	document.getElementById("giveup").hidden = true;
 	document.getElementById("tooltip").hidden = true;
 	document.getElementById("random").hidden = false;
+	document.getElementById("randomhard").hidden = false;
 }

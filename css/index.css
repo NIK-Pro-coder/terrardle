@@ -127,15 +127,15 @@
 }
 
 .correct {
-	background: green;
+	background: lightgreen;
 }
 
 .wrong {
-	background: red;
+	background: lightcoral;
 }
 
 .partial {
-	background: orange;
+	background: lightsalmon;
 }
 
 blockquote {
@@ -211,6 +211,7 @@ td img {
 .border {
 	border: 1px solid gray;
 	border-radius: 5px;
+	background: rgba(125, 125, 125, 0.5);
 }
 
 #yesterdayitem img {
