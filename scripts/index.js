@@ -1,5 +1,6 @@
 let ITEMINFO = null;
 let ITEMS = null;
+let ITEMSOURCES = null;
 
 const currentday = Math.floor(Date.now() / 86400000);
 
@@ -149,6 +150,28 @@ function laterRelease(rel1, rel2) {
 	return s1.length > s2.length;
 }
 
+function updateGuess(what, where) {
+	for (let i = 0; i < what.length; i++) {
+		let n = what[i];
+
+		let div = document.createElement("td");
+		div.innerHTML = n.what;
+
+		if (n.class != "") {
+			div.classList.add(n.class);
+		}
+
+		div.style.opacity = 0;
+		div.style.animationDelay = `${i / 2}s`;
+
+		setTimeout(() => {
+			div.style.opacity = 1;
+		}, i * 500);
+
+		where.appendChild(div);
+	}
+}
+
 function selectItem(item) {
 	const iteminput = document.getElementById("iteminput");
 	iteminput.value = "";
@@ -190,7 +213,12 @@ function selectItem(item) {
 
 	let tr = document.createElement("tr");
 
-	tr.innerHTML += `<td><abbr title="${item.name}"><img src="${item.imgs[0]}" alt="${item.name}"></abbr></td>`;
+	let toadd = [];
+
+	toadd.push({
+		class: "",
+		what: `<abbr title="${item.name}"><img src="${item.imgs[0]}" alt="${item.name}"></abbr>`,
+	});
 
 	let cls = "";
 	let ins = "";
@@ -205,7 +233,10 @@ function selectItem(item) {
 			ins = " > ";
 		}
 	}
-	tr.innerHTML += `<td class="${cls}">${ins}${item.stack}</td>`;
+	toadd.push({
+		class: cls,
+		what: `${ins}${item.stack}`,
+	});
 
 	let tp = "";
 	let found = 0;
@@ -231,7 +262,10 @@ function selectItem(item) {
 			cls = "partial";
 		}
 	}
-	tr.innerHTML += `<td class="${cls}">${tp}</td>`;
+	toadd.push({
+		class: cls,
+		what: `${tp}`,
+	});
 
 	if (RARITIES[item.rarity] == RARITIES[SELITEM.rarity]) {
 		cls = "correct";
@@ -244,7 +278,10 @@ function selectItem(item) {
 			ins = " > ";
 		}
 	}
-	tr.innerHTML += `<td class="${cls}">${ins}<span class="${item.rarity} textoutline">${item.rarity}</span></td>`;
+	toadd.push({
+		class: cls,
+		what: `${ins}<span class="${item.rarity} textoutline">${item.rarity}</span>`,
+	});
 
 	if (item.price == SELITEM.price) {
 		cls = "correct";
@@ -257,7 +294,10 @@ function selectItem(item) {
 			ins = " > ";
 		}
 	}
-	tr.innerHTML += `<td class="${cls}">${ins}${parseCoinValue(item.price)}</td>`;
+	toadd.push({
+		class: cls,
+		what: `${ins}${parseCoinValue(item.price)}`,
+	});
 
 	if (item.research == SELITEM.research) {
 		cls = "correct";
@@ -270,20 +310,22 @@ function selectItem(item) {
 			ins = " > ";
 		}
 	}
-	tr.innerHTML += `<td class="${cls}">${ins}${item.research}</td>`;
+	toadd.push({
+		class: cls,
+		what: `${ins}${item.research}`,
+	});
 
-	if (item.released == SELITEM.released) {
+	if (item.source == SELITEM.source) {
 		cls = "correct";
-		ins = "";
 	} else {
 		cls = "wrong";
-		if (laterRelease(item.released, SELITEM.released)) {
-			ins = " < ";
-		} else {
-			ins = " > ";
-		}
 	}
-	tr.innerHTML += `<td class="${cls}">${ins}${item.released}</td>`;
+	toadd.push({
+		class: cls,
+		what: `${ITEMSOURCES[item.source]}`,
+	});
+
+	updateGuess(toadd, tr);
 
 	guesses.appendChild(tr);
 
@@ -308,6 +350,12 @@ function selectItem(item) {
 }
 
 function parseTime(value) {
+	ins = "";
+	if (value < 0) {
+		value = -value;
+		ins = "-";
+	}
+
 	let hours = 0;
 	let minutes = 0;
 
@@ -324,16 +372,16 @@ function parseTime(value) {
 	if (minutes < 10) minutes = `0${minutes}`;
 	if (value < 10) value = `0${value}`;
 
-	return `${hours}:${minutes}:${value}`;
+	return `${ins}${hours}:${minutes}:${value}`;
 }
 
 function updateTimer() {
 	const timer = document.getElementById("timer");
 
 	const now = Date.now();
-	const today = Math.floor(now / 86400000 + 1) * 86400000;
+	const tomorrow = (currentday + 1) * 86400000;
 
-	const diff = -Math.floor((now - today) / 1000);
+	const diff = -Math.floor((now - tomorrow) / 1000);
 
 	timer.innerHTML = `Next daily item in ${parseTime(diff)}`;
 
@@ -341,7 +389,7 @@ function updateTimer() {
 		timer.innerHTML += " (refresh to update)";
 	}
 
-	setTimeout(updateTimer, 1000);
+	setTimeout(updateTimer, 1);
 }
 
 function selectFirst(event, input) {
@@ -352,13 +400,28 @@ function selectFirst(event, input) {
 	}
 }
 
+function getItemForDay(day) {
+	return ITEMS[(day * 652654) % ITEMS.length];
+}
+
+let activesources = {};
+
 async function main() {
 	let given = await fetch("/items");
 	ITEMINFO = await given.json();
 
 	ITEMS = ITEMINFO.done;
+	ITEMSOURCES = ITEMINFO.sources;
 
-	SELITEM = ITEMS[(currentday * 56) % ITEMS.length];
+	SELITEM = getItemForDay(currentday);
+
+	let sources = Object.keys(ITEMSOURCES);
+	const toggles = document.getElementById("sources");
+	for (let i = 0; i < sources.length; i++) {
+		toggles.innerHTML += `<input type="checkbox" checked onclick="activesources['${sources[i]}'] = !activesources['${sources[i]}'];" id="${sources[i]}">`;
+		toggles.innerHTML += `<label for="${sources[i]}">${ITEMSOURCES[sources[i]]}</label><br>`;
+		activesources[sources[i]] = true;
+	}
 
 	const tip = document.getElementById("tooltip");
 	if (SELITEM.tooltip == "No tooltip for this item") {
@@ -371,7 +434,7 @@ async function main() {
 		}
 	}
 
-	YESTERDAY = ITEMS[(currentday * 56 - 1) % ITEMS.length];
+	YESTERDAY = getItemForDay(currentday - 1);
 	document.getElementById("yesterdayitem").innerHTML =
 		`<abbr class="itemdisplay" title="${YESTERDAY.tooltip}"><img src="${YESTERDAY.imgs[0]}">${YESTERDAY.name}</abbr>`;
 
@@ -390,16 +453,23 @@ async function main() {
 }
 
 function randomItem() {
-	const iteminput = document.getElementById("iteminput");
-
-	iteminput.focus();
-
 	let tips = [];
 	for (let i = 0; i < ITEMS.length; i++) {
-		if (ITEMS[i].tooltip != "No tooltip for this item") {
+		if (
+			ITEMS[i].tooltip != "No tooltip for this item" &&
+			activesources[ITEMS[i].source]
+		) {
 			tips.push(ITEMS[i]);
 		}
 	}
+
+	if (tips.length == 0) {
+		return;
+	}
+
+	const iteminput = document.getElementById("iteminput");
+
+	iteminput.focus();
 
 	SELITEM = tips[Math.floor(Math.random() * tips.length)];
 	const tip = document.getElementById("tooltip");
@@ -429,9 +499,16 @@ function randomItemHard() {
 
 	let tips = [];
 	for (let i = 0; i < ITEMS.length; i++) {
-		if (ITEMS[i].tooltip == "No tooltip for this item") {
+		if (
+			ITEMS[i].tooltip == "No tooltip for this item" &&
+			activesources[ITEMS[i].source]
+		) {
 			tips.push(ITEMS[i]);
 		}
+	}
+
+	if (tips.length == 0) {
+		return;
 	}
 
 	SELITEM = tips[Math.floor(Math.random() * tips.length)];

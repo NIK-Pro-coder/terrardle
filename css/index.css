@@ -229,3 +229,15 @@ td img {
 abbr {
 	text-decoration: none;
 }
+
+td {
+	animation: 1s fadein;
+}
+@keyframes fadein {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
